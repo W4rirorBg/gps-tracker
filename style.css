@@ -1,0 +1,59 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 20px;
+  background-color: #000; /* Black background */
+  color: #fff; /* White text */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #FFCA28; /* Firebase Yellow */
+  text-shadow: 0 0 8px #FFCA28;
+}
+
+button {
+  background: transparent;
+  color: #FF3B30; /* Firebase Red */
+  border: 3px solid #FFCA28; /* Yellow outline */
+  padding: 14px 40px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #FFCA28;
+}
+
+button:hover {
+  background-color: #FFCA28;
+  color: #000;
+  border-color: #FF3B30;
+  box-shadow: 0 0 25px #FF3B30;
+}
+
+#status {
+  margin-top: 25px;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: #FF3B30; /* Red */
+  text-shadow: 0 0 5px #FF3B30;
+}
+
+#location {
+  margin-top: 15px;
+  font-size: 1.3rem;
+  color: #FFCA28; /* Yellow */
+  text-shadow: 0 0 6px #FFCA28;
+  font-weight: 600;
+  background-color: rgba(255, 255, 40, 0.1);
+  padding: 12px 18px;
+  border-radius: 10px;
+  max-width: 380px;
+  text-align: center;
+}

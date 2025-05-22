@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <button onclick="start()">Start Tracking</button>
+  <div id="status"></div>
+  <div id="location">Location: Not available</div>
+
+  <script>
+    function start() {
+      const status = document.getElementById('status');
+      const locationEl = document.getElementById('location');
+
+      if (!navigator.geolocation) {
+        status.textContent = "Geolocation not supported";
+        return;
+      }
+
+      status.textContent = "Locating…";
+
+      navigator.geolocation.watchPosition(
+        pos => {
+          status.textContent = "Location found!";
+          locationEl.textContent = `Latitude: ${pos.coords.latitude.toFixed(6)}, Longitude: ${pos.coords.longitude.toFixed(6)}`;
+        },
+        err => {
+          status.textContent = "Error getting location: " + err.message;
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+  </script>
+</body>
+</html>

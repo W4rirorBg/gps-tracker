@@ -37,5 +37,41 @@ function login() {
     })
     .catch(error => {
       document.getElementById('error').innerText = error.message;
+      const users = {
+  admin: { password: "GDGISpass2025", type: "admin" },
+  viewer1: { password: "viewer123", type: "viewer" },
+  student1: { password: "trackme", type: "tracked" },
+};
+
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+  const error = document.getElementById("error-message");
+
+  if (users[user] && users[user].password === pass) {
+    showPanel(users[user].type);
+  } else {
+    error.textContent = "Invalid login";
+  }
+}
+
+function showPanel(type) {
+  document.querySelector(".login-container").classList.add("hidden");
+  document.getElementById("admin-panel").classList.add("hidden");
+  document.getElementById("viewer-panel").classList.add("hidden");
+  document.getElementById("tracked-panel").classList.add("hidden");
+
+  if (type === "admin") document.getElementById("admin-panel").classList.remove("hidden");
+  if (type === "viewer") document.getElementById("viewer-panel").classList.remove("hidden");
+  if (type === "tracked") document.getElementById("tracked-panel").classList.remove("hidden");
+}
+
+function logout() {
+  document.querySelector(".login-container").classList.remove("hidden");
+  document.getElementById("admin-panel").classList.add("hidden");
+  document.getElementById("viewer-panel").classList.add("hidden");
+  document.getElementById("tracked-panel").classList.add("hidden");
+  document.getElementById("error-message").textContent = "";
+}
     });
 }

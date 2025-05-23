@@ -1,61 +1,41 @@
-// Import Firebase functions (modular SDK)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-
-// Your Firebase configuration (replace with your own config if needed)
+// Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDGJvL0HJIzKimGeZap9NjNBushrxFlCqY",
-  authDomain: "gps-tracker-new-9685c.firebaseapp.com",
-  projectId: "gps-tracker-new-9685c",
-  storageBucket: "gps-tracker-new-9685c.firebasestorage.app",
-  messagingSenderId: "307345855258",
-  appId: "1:307345855258:web:18ac358af2260f7a6fd2a3",
-  measurementId: "G-7DNGMPQN51"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const database = getDatabase(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
 
-// Get DOM elements
-const statusEl = document.getElementById('status');
-const locationEl = document.getElementById('location');
-const startButton = document.getElementById('startTracking');
+function login() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const role = document.getElementById('role').value;
 
-// Start geolocation tracking on button click
-startButton.addEventListener('click', () => {
-  if (!navigator.geolocation) {
-    statusEl.textContent = 'Geolocation is not supported by your browser';
-    return;
-  }
-
-  statusEl.textContent = 'Locating…';
-
-  navigator.geolocation.watchPosition(success, error, {
-    enableHighAccuracy: true,
-  });
-});
-
-// Success callback saves location to Firebase
-function success(position) {
-  const latitude = position.coords.latitude;
-  const longitude = position.coords.longitude;
-
-  statusEl.textContent = 'Location found!';
-  locationEl.textContent = `Latitude: ${latitude.toFixed(6)}, Longitude: ${longitude.toFixed(6)}`;
-
-  set(ref(database, 'users/user123/location'), {
-    latitude: latitude,
-    longitude: longitude,
-    timestamp: Date.now()
-  }).catch(err => {
-    statusEl.textContent = 'Error saving to database: ' + err.message;
-  });
-}
-
-// Error callback
-function error() {
-  statusEl.textContent = 'Unable to retrieve your location';
+  auth.signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      const user = userCredential.user;
+      // Redirect based on role
+      switch(role) {
+        case 'admin':
+          window.location.href = 'admin.html';
+          break;
+        case 'viewer':
+          window.location.href = 'viewer.html';
+          break;
+        case 'tracked':
+          window.location.href = 'tracked.html';
+          break;
+      }
+    })
+    .catch(error => {
+      document.getElementById('error').innerText = error.message;
+    });
 }

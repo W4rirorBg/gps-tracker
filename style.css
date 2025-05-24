@@ -1,42 +1,52 @@
 body {
   font-family: Arial, sans-serif;
-  background: white;
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
 }
 
-.login-container, .panel {
-  border: 1px solid #ddd;
+#login-container {
+  margin-top: 50px;
+}
+
+#app-container {
+  display: flex;
+  width: 100%;
+}
+
+#sidebar {
+  width: 25vw;
   padding: 20px;
-  width: 300px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  background: #fff;
+  border-right: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
-input {
-  display: block;
-  margin: 10px 0;
-  width: 100%;
-  padding: 8px;
+#bus-list, #user-list {
+  list-style-type: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
-button {
-  padding: 10px;
-  width: 100%;
-  background-color: #007bff;
-  color: white;
-  border: none;
+#bus-list li {
+  cursor: pointer;
+  margin-bottom: 5px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-.hidden {
-  display: none;
+#bus-list li:hover {
+  background-color: #eee;
 }
 
-#error-message {
-  color: red;
-  font-size: 14px;
+#map {
+  flex-grow: 1;
+}
+
+#admin-panel {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
 }

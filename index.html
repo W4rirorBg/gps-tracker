@@ -1,64 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GPS Tracker Login</title>
-  <link rel="stylesheet" href="styles.css">
-  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-  <script defer src="script.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GPS Bus Tracker</title>
+<link rel="stylesheet" href="style.css" />
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- Google Maps JS API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <select id="role">
-      <option value="admin">Admin</option>
-      <option value="viewer">Viewer</option>
-      <option value="tracked">Tracked</option>
-    </select>
-    <button onclick="login()">Login</button>
-    <p id="error"></p>
-  </div>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPS Tracker Login</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="login-container">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    <p id="error-message"></p>
-  </div>
 
-  <div id="admin-panel" class="panel hidden">
-    <h2>Admin Panel</h2>
-    <p>Welcome Admin</p>
-    <button onclick="logout()">Logout</button>
+<div id="login-container">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button id="login-btn">Login</button>
+  <button id="logout-btn" style="display:none;">Logout</button>
+  <p id="login-error" style="color:red;"></p>
+</div>
+
+<div id="app-container" style="display:none;">
+  <h1>GPS Bus Tracker</h1>
+  <div id="sidebar">
+    <h3>Buses</h3>
+    <ul id="bus-list"></ul>
+    <div id="admin-panel" style="display:none;">
+      <h3>Admin Panel</h3>
+      <h4>Add User</h4>
+      <input type="email" id="new-user-email" placeholder="User email" />
+      <select id="new-user-role">
+        <option value="viewer">Viewer</option>
+        <option value="tracked">Tracked</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button id="add-user-btn">Add User</button>
+      <h4>User List</h4>
+      <ul id="user-list"></ul>
+    </div>
   </div>
 
-  <div id="viewer-panel" class="panel hidden">
-    <h2>Viewer Panel</h2>
-    <p>Welcome Viewer</p>
-    <button onclick="logout()">Logout</button>
-  </div>
+  <div id="map" style="width: 70vw; height: 600px;"></div>
+</div>
 
-  <div id="tracked-panel" class="panel hidden">
-    <h2>Tracking Panel</h2>
-    <p>Your location is being tracked.</p>
-    <button onclick="logout()">Logout</button>
-  </div>
-
-  <script src="app.js"></script>
-</body>
-</html>
-
+<script src="app.js"></script>
 </body>
 </html>

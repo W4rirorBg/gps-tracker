@@ -1,34 +1,64 @@
-   import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { ref, onValue } from "firebase/database";
-import { db } from "./firebase";
+// busMap.js
 
-export default function BusMap() {
-  const [buses, setBuses] = useState({});
+import { db } from './firebase.js';
 
-  useEffect(() => {
-    const locationRef = ref(db, "locations/");
-    const unsub = onValue(locationRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setBuses(snapshot.val());
+// Google Maps map object and markers registry
+let map;
+const busMarkers = {};
+
+// Initialize the Google Map
+export function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: 0, lng: 0 },
+    zoom: 2,
+  });
+
+  // Listen to "buses" collection updates
+  db.collection("buses").onSnapshot(snapshot => {
+    snapshot.docChanges().forEach(change => {
+      const busId = change.doc.id;
+      const data = change.doc.data();
+
+      if (change.type === "added" || change.type === "modified") {
+        updateBusMarker(busId, data);
+      } else if (change.type === "removed") {
+        removeBusMarker(busId);
       }
     });
-    return () => unsub();
-  }, []);
+  });
+}
 
-  return (
-    <MapContainer center={[12.9716, 77.5946]} zoom={12} style={{ height: "90vh" }}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {Object.entries(buses).map(([busId, data]) => (
-        <Marker key={busId} position={[data.latitude, data.longitude]}>
-          <Popup>
-            <b>{busId}</b><br />
-            {new Date(data.timestamp).toLocaleTimeString()}
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
-  );
+function updateBusMarker(busId, data) {
+  const pos = new google.maps.LatLng(data.lat, data.lng);
+
+  let marker = busMarkers[busId];
+  if (!marker) {
+    marker = new google.maps.Marker({
+      position: pos,
+      map: map,
+      title: data.name,
+    });
+
+    const infoWindow = new google.maps.InfoWindow({
+      content: `${data.name} <br> ${data.placeName || ""}`,
+    });
+
+    marker.addListener('click', () => {
+      infoWindow.open(map, marker);
+    });
+
+    busMarkers[busId] = marker;
+    marker.infoWindow = infoWindow;
+  } else {
+    marker.setPosition(pos);
+    marker.infoWindow.setContent(`${data.name} <br> ${data.placeName || ""}`);
+  }
+}
+
+function removeBusMarker(busId) {
+  const marker = busMarkers[busId];
+  if (marker) {
+    marker.setMap(null);
+    delete busMarkers[busId];
+  }
 }

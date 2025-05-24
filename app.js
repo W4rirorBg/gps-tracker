@@ -1,77 +1,47 @@
-// Your Firebase configuration
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+// Your Firebase config  
+const firebaseConfig = {  
+  apiKey: "AIzaSyAMP0EPBKB3e_sOXj1xLlnKou9CHRS-HFo",  
+  authDomain: "gps-tracker-2aaf9.firebaseapp.com",  
+  databaseURL: "https://gps-tracker-2aaf9-default-rtdb.asia-southeast1.firebasedatabase.app",  
+  projectId: "gps-tracker-2aaf9",  
+  storageBucket: "gps-tracker-2aaf9.firebasestorage.app",  
+  messagingSenderId: "112704983769",  
+  appId: "1:112704983769:web:46dfd5d3ce11dd99e964c8",  
+  measurementId: "G-YZ6T9PQD0M"  
+};  
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
+firebase.initializeApp(firebaseConfig);  
+const auth = firebase.auth();  
+const db = firebase.firestore();  
 
-function login() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const role = document.getElementById('role').value;
+const loginContainer = document.getElementById("login-container");  
+const appContainer = document.getElementById("app-container");  
+const loginBtn = document.getElementById("login-btn");  
+const logoutBtn = document.getElementById("logout-btn");  
+const emailInput = document.getElementById("email");  
+const passwordInput = document.getElementById("password");  
+const loginError = document.getElementById("login-error");  
 
-  auth.signInWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      const user = userCredential.user;
-      // Redirect based on role
-      switch(role) {
-        case 'admin':
-          window.location.href = 'admin.html';
-          break;
-        case 'viewer':
-          window.location.href = 'viewer.html';
-          break;
-        case 'tracked':
-          window.location.href = 'tracked.html';
-          break;
-      }
-    })
-    .catch(error => {
-      document.getElementById('error').innerText = error.message;
-      const users = {
-  admin: { password: "GDGISpass2025", type: "admin" },
-  viewer1: { password: "viewer123", type: "viewer" },
-  student1: { password: "trackme", type: "tracked" },
-};
+let currentUserRole = null;  
+let map;  
+let busMarkers = {};  
 
-function login() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-  const error = document.getElementById("error-message");
+// Auth change listener  
+auth.onAuthStateChanged(async user => {  
+  if (user) {  
+    loginContainer.style.display = "none";  
+    appContainer.style.display = "flex";  
 
-  if (users[user] && users[user].password === pass) {
-    showPanel(users[user].type);
-  } else {
-    error.textContent = "Invalid login";
-  }
-}
+    // Get role from Firestore users collection  
+    try {  
+      const doc = await db.collection("users").doc(user.uid).get();  
+      if (doc.exists) {  
+        currentUserRole = doc.data().role;  
+      } else {  
+        currentUserRole = "viewer"; // default  
+      }  
+    } catch {  
+      currentUserRole = "viewer";  
+    }  
 
-function showPanel(type) {
-  document.querySelector(".login-container").classList.add("hidden");
-  document.getElementById("admin-panel").classList.add("hidden");
-  document.getElementById("viewer-panel").classList.add("hidden");
-  document.getElementById("tracked-panel").classList.add("hidden");
-
-  if (type === "admin") document.getElementById("admin-panel").classList.remove("hidden");
-  if (type === "viewer") document.getElementById("viewer-panel").classList.remove("hidden");
-  if (type === "tracked") document.getElementById("tracked-panel").classList.remove("hidden");
-}
-
-function logout() {
-  document.querySelector(".login-container").classList.remove("hidden");
-  document.getElementById("admin-panel").classList.add("hidden");
-  document.getElementById("viewer-panel").classList.add("hidden");
-  document.getElementById("tracked-panel").classList.add("hidden");
-  document.getElementById("error-message").textContent = "";
-}
-    });
-}
+    setupUIForRole(current

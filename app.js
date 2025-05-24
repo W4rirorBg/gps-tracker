@@ -1,47 +1,37 @@
-// Your Firebase config  
+// Import Firebase modules (modular SDK)  
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";  
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";  
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";  
+
+// Your Firebase config (fill with your project details)  
 const firebaseConfig = {  
-  apiKey: "AIzaSyAMP0EPBKB3e_sOXj1xLlnKou9CHRS-HFo",  
-  authDomain: "gps-tracker-2aaf9.firebaseapp.com",  
-  databaseURL: "https://gps-tracker-2aaf9-default-rtdb.asia-southeast1.firebasedatabase.app",  
-  projectId: "gps-tracker-2aaf9",  
-  storageBucket: "gps-tracker-2aaf9.firebasestorage.app",  
-  messagingSenderId: "112704983769",  
-  appId: "1:112704983769:web:46dfd5d3ce11dd99e964c8",  
-  measurementId: "G-YZ6T9PQD0M"  
+  apiKey: "<YOUR_FIREBASE_API_KEY>",  
+  authDomain: "<YOUR_PROJECT>.firebaseapp.com",  
+  databaseURL: "https://<YOUR_PROJECT>.firebaseio.com",  
+  projectId: "<YOUR_PROJECT>",  
+  storageBucket: "<YOUR_PROJECT>.appspot.com",  
+  messagingSenderId: "<SENDER_ID>",  
+  appId: "<APP_ID>"  
 };  
 
-firebase.initializeApp(firebaseConfig);  
-const auth = firebase.auth();  
-const db = firebase.firestore();  
+// Initialize Firebase  
+const app = initializeApp(firebaseConfig);  
+const auth = getAuth(app);  
+const db = getDatabase(app);  
 
-const loginContainer = document.getElementById("login-container");  
-const appContainer = document.getElementById("app-container");  
-const loginBtn = document.getElementById("login-btn");  
-const logoutBtn = document.getElementById("logout-btn");  
-const emailInput = document.getElementById("email");  
-const passwordInput = document.getElementById("password");  
-const loginError = document.getElementById("login-error");  
+// DOM Elements  
+const loginContainer = document.getElementById('login-container');  
+const appContainer = document.getElementById('app-container');  
+const loginBtn = document.getElementById('login-btn');  
+const logoutBtn = document.getElementById('logout-btn');  
+const emailInput = document.getElementById('email');  
+const passwordInput = document.getElementById('password');  
+const loginError = document.getElementById('login-error');  
 
-let currentUserRole = null;  
-let map;  
-let busMarkers = {};  
+let map, busMarkers = {};  
 
-// Auth change listener  
-auth.onAuthStateChanged(async user => {  
-  if (user) {  
-    loginContainer.style.display = "none";  
-    appContainer.style.display = "flex";  
+// Initialize Leaflet map centered on Delhi  
+function initMap() {  
+  map = L.map('map').setView([28.6139, 77.2090], 12); // Delhi coords  
 
-    // Get role from Firestore users collection  
-    try {  
-      const doc = await db.collection("users").doc(user.uid).get();  
-      if (doc.exists) {  
-        currentUserRole = doc.data().role;  
-      } else {  
-        currentUserRole = "viewer"; // default  
-      }  
-    } catch {  
-      currentUserRole = "viewer";  
-    }  
-
-    setupUIForRole(current
+  L.tileLayer('https://{s

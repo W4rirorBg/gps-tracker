@@ -46,3 +46,37 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const db = getDatabase();
+const busesRef = ref(db, 'buses');
+
+let busMarkers = {}; // Keep track of markers on map keyed by bus ID
+
+onValue(busesRef, (snapshot) => {
+  const busesData = snapshot.val();
+
+  // Loop through all buses
+  for (const busId in busesData) {
+    const bus = busesData[busId];
+    const latLng = [bus.lat, bus.lng];
+
+    if (busMarkers[busId]) {
+      // Update existing marker position
+      busMarkers[busId].setLatLng(latLng);
+    } else {
+      // Create new marker and add to map
+      const marker = L.marker(latLng).addTo(map)
+        .bindPopup(`${bus.name || busId}`);
+      busMarkers[busId] = marker;
+    }
+  }
+
+  // Optionally: remove markers for buses no longer present
+  for (const existingId in busMarkers) {
+    if (!busesData[existingId]) {
+      map.removeLayer(busMarkers[existingId]);
+      delete busMarkers[existingId];
+    }
+  }
+});

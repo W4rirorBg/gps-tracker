@@ -35,3 +35,14 @@ function initMap() {
   map = L.map('map').setView([28.6139, 77.2090], 12); // Delhi coords  
 
   L.tileLayer('https://{s
+              // Coordinates for Delhi center
+const delhiLatLng = [28.6139, 77.2090];
+
+// Initialize the Leaflet map and set the view to Delhi with zoom 12
+const map = L.map('map').setView(delhiLatLng, 12);
+
+// Add OpenStreetMap tile layer — free to use and works great
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);

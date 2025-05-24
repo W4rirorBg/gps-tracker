@@ -47,5 +47,35 @@
 </div>
 
 <script src="app.js"></script>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Delhi GPS Bus Tracker with Firebase + Leaflet</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+  body, html { height: 100%; margin: 0; }
+  #map { height: 90vh; }
+  #login-container, #app-container { padding: 12px; }
+  #login-container { max-width: 300px; margin: 20px auto; }
+</style>
+</head>
+<body>
+
+<div id="login-container">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email" /> <br/><br/>
+  <input type="password" id="password" placeholder="Password" /> <br/><br/>
+  <button id="login-btn">Login</button>
+  <button id="logout-btn" style="display:none;">Logout</button>
+  <p id="login-error" style="color:red"></p>
+</div>
+
+<div id="app-container" style="display:none;">
+  <h1>Delhi GPS Bus Tracker</h1>
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
